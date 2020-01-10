@@ -15,7 +15,7 @@ from aiohttp import ClientSession
 class spiderCompositonTool:
     # lwcursor = self.db.cursor();
     loop = asyncio.get_event_loop()
-    start = 0
+
 
     # 首页的主列表分类
     home_list_type = ['一年级作文','二年级作文','三年级作文','四年级作文','五年级作文','六年级作文',]
@@ -126,7 +126,7 @@ class spiderCompositonTool:
 
         lwprint('\n******************start:'+str(start)+'\n')
         lwcursor = self.db.cursor()
-        sql = "select ID from t_compoistion_list where catename = '二年级作文' limit {},{}".format(str(self.start),'1000' )
+        sql = "select ID from t_compoistion_list1 limit {},{}".format(str(self.start),'500' )
         lwcursor.execute(sql)
         res = lwcursor.fetchall()
         # lwprint(res)
@@ -230,9 +230,7 @@ class spiderCompositonTool:
             for result in await asyncio.gather(*futures):
                 pass
 
-
-
-
+    start = 29500
     tasks = []
     url = "http://ibaby.ipadown.com/api/zuowen/zw.detail.php"
     loop = asyncio.get_event_loop()
@@ -253,9 +251,9 @@ class spiderCompositonTool:
         for res in result:
             self.handleDeatilDatas(res)
 
-        self.start = self.start + 1000
-        if(self.start <= 100000):
-            time.sleep(125)
+        self.start = self.start + 500
+        if(self.start <= 30000):
+            time.sleep(10)
             self.getIDfromBD(self.start)
 
     def handleDeatilDatas(self,res):
@@ -275,12 +273,13 @@ class spiderCompositonTool:
         ress = self.db.cursor().execute(sql)
         self.db.commit()
 
-
+    def initCount(self):
+        pass
 
 
 if __name__ == '__main__':
-    # spider =  spiderCompositonTool()
-    # spider.getIDfromBD(spider.start)
-    # spider.loop.close()
+    spider =  spiderCompositonTool()
+    spider.getIDfromBD(spider.start)
+    spider.loop.close()
     # spiderCompositonTool().requestHomeListDatas()
-    spiderCompositonTool().getDatasWithLable()
+    # spiderCompositonTool().getDatasWithLable()
